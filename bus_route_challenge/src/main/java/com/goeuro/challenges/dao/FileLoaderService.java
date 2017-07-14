@@ -1,4 +1,4 @@
-package com.goeuro.challenges.services;
+package com.goeuro.challenges.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +15,18 @@ import java.util.stream.Collectors;
  * Created by abdu on 7/12/2017.
  */
 @Service
-public class FileLoaderService {
+public class FileLoaderService implements  IDataLoaderService{
 
     private static Logger logger = LoggerFactory.getLogger(FileLoaderService.class);
-
     private List<String> lines = new ArrayList<>();
     private Map<Integer, List<Integer>> busRoutes = new HashMap<>();
 
-    public void readFile(String path) {
+    @Override
+    public Map<Integer, List<Integer>> getBusRoutes() {
+        return busRoutes;
+    }
+
+    public void loadDataFile(String path) {
 
         logger.info("Reading File");
         try (BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
@@ -41,8 +45,7 @@ public class FileLoaderService {
             logger.trace("Bus route {} with stations {}", key.getKey(), key.getValue());
         }
     }
-
-    public List<Integer> parseLine(String line) {
+    private List<Integer> parseLine(String line) {
         String[] items = line.split(" ");
         List<String> strList = Arrays.asList(items);
         List<Integer> intList = new ArrayList<>();
@@ -50,11 +53,4 @@ public class FileLoaderService {
         return intList;
     }
 
-    public List<String> getLines() {
-        return lines;
-    }
-
-    public Map<Integer, List<Integer>> getBusRoutes() {
-        return busRoutes;
-    }
 }

@@ -1,41 +1,40 @@
 package com.goeuro.challenges.services;
 
-import com.goeuro.challenges.model.DirectBusRouteResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by abdu on 7/12/2017.
  */
 @Service
-public class BusRouteService {
+public class BusRouteService implements IBusRouteService {
 
     private static Logger logger = LoggerFactory.getLogger(BusRouteService.class);
 
-    @Autowired
-    FileLoaderService fileLoaderService;
+    @Override
+    public boolean directRoute(Map<Integer, List<Integer>> busRoutes,
+                               int depStationId, int arrStationId,
+                               boolean biDirection) {
 
-    public DirectBusRouteResponse directRoute(int depStationId, int arrStationId) {
         boolean directRoute = false;
-        for(List<Integer> busRoute: fileLoaderService.getBusRoutes().values()) {
-            if(directRoute(busRoute, depStationId, arrStationId)) {
+        for(List<Integer> busRoute: busRoutes.values()) {
+            if(directRoute(busRoute, depStationId, arrStationId, biDirection)) {
                 directRoute = true;
                 break;
             }
         }
-        return new DirectBusRouteResponse(depStationId, arrStationId, directRoute);
+        return directRoute;
     }
 
-    public boolean directRoute(List<Integer> busRoute, int start, int end) {
-        return directRoute(busRoute, start, end, true);
-    }
-
-    public boolean directRoute(List<Integer> busRoute, int start, int end, boolean biDirection) {
-        return biDirection ? findPointsBi(busRoute, start, end) : findPointsUni(busRoute, start, end);
+    private boolean directRoute(List<Integer> busRoute,
+                                int depStationId, int arrStationId,
+                                boolean biDirection) {
+        return biDirection ? findPointsBi(busRoute, depStationId, arrStationId) :
+                findPointsUni(busRoute, depStationId, arrStationId);
     }
 
     private boolean findPointsUni(List<Integer> nums, int start, int end) {

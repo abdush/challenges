@@ -1,6 +1,6 @@
 package com.goeuro.challenges;
 
-import com.goeuro.challenges.services.FileLoaderService;
+import com.goeuro.challenges.dao.FileLoaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import java.util.Arrays;
 public class Application implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
-
     @Autowired
     FileLoaderService fileLoaderService;
 
@@ -28,14 +27,14 @@ public class Application implements ApplicationRunner {
         SpringApplication.run(Application.class, args);
     }
 
-    @Override
-    public void run(ApplicationArguments applicationArguments) throws Exception {
-        logger.info("Application commandline args... {}" , Arrays.toString(applicationArguments.getSourceArgs()));
-        fileLoaderService.readFile(applicationArguments.getSourceArgs()[0]);
-    }
-
     private static void usage() {
         System.err.println("usage: java jarfile path");
         System.exit(-1);
+    }
+
+    @Override
+    public void run(ApplicationArguments applicationArguments) throws Exception {
+        logger.info("Application commandline args... {}" , Arrays.toString(applicationArguments.getSourceArgs()));
+        fileLoaderService.loadDataFile(applicationArguments.getSourceArgs()[0]);
     }
 }
