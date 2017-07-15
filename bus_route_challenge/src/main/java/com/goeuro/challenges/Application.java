@@ -28,7 +28,7 @@ public class Application implements ApplicationRunner {
     }
 
     private static void usage() {
-        System.err.println("usage: java jarfile path");
+        System.err.println("System exit. Usage: java -jar <jarfile.jar> <filepath>");
         System.exit(-1);
     }
 
