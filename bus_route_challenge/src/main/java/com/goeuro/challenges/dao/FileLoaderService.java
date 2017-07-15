@@ -26,17 +26,17 @@ public class FileLoaderService implements  IDataLoaderService{
         return busRoutes;
     }
 
+    //TODO add file not found exception
     public void loadDataFile(String path) {
 
-        logger.info("Reading File");
         try (BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
             lines = br.lines().collect(Collectors.toList());
         } catch (IOException e) {
             logger.warn("Error reading file {}", e);
         }
 
-        lines.forEach(System.out::println);
-        lines = lines.subList(1, lines.size());
+        lines.remove(0);
+        //lines.forEach(System.out::println);
         for(String line: lines) {
             List<Integer> busRoute = parseLine(line);
             busRoutes.put(busRoute.get(0),busRoute.subList(1, busRoute.size()));
@@ -45,6 +45,7 @@ public class FileLoaderService implements  IDataLoaderService{
             logger.trace("Bus route {} with stations {}", key.getKey(), key.getValue());
         }
     }
+
     private List<Integer> parseLine(String line) {
         String[] items = line.split(" ");
         List<String> strList = Arrays.asList(items);

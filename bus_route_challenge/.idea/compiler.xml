@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="bus-route-challenge" target="1.6" />
+      <module name="bus-route-challenge" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
