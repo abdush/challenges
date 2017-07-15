@@ -13,6 +13,20 @@ import java.util.stream.Collectors;
 
 /**
  * Created by abdu on 7/12/2017.
+ * A file based implementation for {@link IDataLoaderService} DAO.
+ * The service loads the bus routes from a file, given the data file path.
+ * The file first line is the number of routes, and each subsequent line contains a space separated
+ * list of integers. The first number is the route id, followed by the station ids.
+ *
+ * ### Example Data
+ 3
+ 0 0 1 2 3 4
+ 1 3 1 6 5
+ 2 0 6 4
+ *
+ * The data is loaded from the file into memory at application startup.
+ * Any changes in the data file needs a restart in the system!
+ * @see IDataLoaderService
  */
 @Service
 public class FileLoaderService implements  IDataLoaderService{
@@ -27,6 +41,7 @@ public class FileLoaderService implements  IDataLoaderService{
     }
 
     //TODO add file not found exception
+    //loads the bus routes data file into a Map memory representation
     public void loadDataFile(String path) {
 
         try (BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
@@ -35,6 +50,7 @@ public class FileLoaderService implements  IDataLoaderService{
             logger.warn("Error reading file {}", e);
         }
 
+        //ignore first line which contains the number of routes
         lines.remove(0);
         //lines.forEach(System.out::println);
         for(String line: lines) {
@@ -46,6 +62,7 @@ public class FileLoaderService implements  IDataLoaderService{
         }
     }
 
+    //Parse the bus route line into list of integers (the route id and the station ids in this route)
     private List<Integer> parseLine(String line) {
         String[] items = line.split(" ");
         List<String> strList = Arrays.asList(items);

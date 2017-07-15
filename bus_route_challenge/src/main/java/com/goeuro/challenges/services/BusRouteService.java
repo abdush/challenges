@@ -16,6 +16,7 @@ public class BusRouteService implements IBusRouteService {
     private static Logger logger = LoggerFactory.getLogger(BusRouteService.class);
 
     @Override
+    //checks for dept & arrival stations in all the given bus routes
     public boolean directRoute(Map<Integer, List<Integer>> busRoutes,
                                int depStationId, int arrStationId,
                                boolean biDirection) {
@@ -30,6 +31,7 @@ public class BusRouteService implements IBusRouteService {
         return directRoute;
     }
 
+    //checks for dept & arrival stations in the given bus route
     private boolean directRoute(List<Integer> busRoute,
                                 int depStationId, int arrStationId,
                                 boolean biDirection) {
@@ -37,6 +39,7 @@ public class BusRouteService implements IBusRouteService {
                 findPointsUni(busRoute, depStationId, arrStationId);
     }
 
+    //checks if nums List contains both start & end, and start comes before end
     private boolean findPointsUni(List<Integer> nums, int start, int end) {
         boolean foundStart = false;
         boolean foundEnd = false;
@@ -57,6 +60,7 @@ public class BusRouteService implements IBusRouteService {
         return foundEnd;
     }
 
+    //checks if nums List contains both start & end, regardless of their position
     private boolean findPointsBi(List<Integer> nums, int start, int end) {
         boolean foundStart = false;
         boolean foundEnd = false;
