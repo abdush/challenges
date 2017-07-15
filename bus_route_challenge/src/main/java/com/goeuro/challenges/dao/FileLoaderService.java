@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 public class FileLoaderService implements  IDataLoaderService{
 
     private static Logger logger = LoggerFactory.getLogger(FileLoaderService.class);
-    private List<String> lines = new ArrayList<>();
     private Map<Integer, List<Integer>> busRoutes = new HashMap<>();
 
     @Override
@@ -42,33 +41,28 @@ public class FileLoaderService implements  IDataLoaderService{
 
     //TODO add file not found exception
     //loads the bus routes data file into a Map memory representation
-    public void loadDataFile(String path) {
+    public void loadDataFile(String path) throws IOException {
 
+        //read the lines, skip first line which contains number of routes
+        //split each line with spaces and map to list of String,
+        // then map to list of int,
+        // Finally collect as a Map
         try (BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
-            lines = br.lines().collect(Collectors.toList());
-        } catch (IOException e) {
-            logger.warn("Error reading file {}", e);
+            busRoutes = br.lines()
+                    .skip(1)
+                    .map(line -> Arrays.asList(line.split(" ")))
+                    .map(list -> toIntList(list))
+                    .collect(Collectors.toMap(list -> list.get(0),
+                            list -> list.subList(1, list.size())));
         }
 
-        //ignore first line which contains the number of routes
-        lines.remove(0);
-        //lines.forEach(System.out::println);
-        for(String line: lines) {
-            List<Integer> busRoute = parseLine(line);
-            busRoutes.put(busRoute.get(0),busRoute.subList(1, busRoute.size()));
-        }
-        for(Map.Entry<Integer, List<Integer>> key: busRoutes.entrySet() ) {
-            logger.trace("Bus route {} with stations {}", key.getKey(), key.getValue());
-        }
+        busRoutes.forEach((k,v) -> logger.trace("Bus route {} with stations {}", k, v));
     }
 
-    //Parse the bus route line into list of integers (the route id and the station ids in this route)
-    private List<Integer> parseLine(String line) {
-        String[] items = line.split(" ");
-        List<String> strList = Arrays.asList(items);
+    //TODO refactor with Java8!!
+    private List<Integer> toIntList(List<String> strList) {
         List<Integer> intList = new ArrayList<>();
         for(String s : strList) intList.add(Integer.valueOf(s));
         return intList;
     }
-
 }

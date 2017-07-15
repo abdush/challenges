@@ -35,6 +35,7 @@ public class BusRouteService implements IBusRouteService {
     private boolean directRoute(List<Integer> busRoute,
                                 int depStationId, int arrStationId,
                                 boolean biDirection) {
+
         return biDirection ? findPointsBi(busRoute, depStationId, arrStationId) :
                 findPointsUni(busRoute, depStationId, arrStationId);
     }
@@ -78,5 +79,21 @@ public class BusRouteService implements IBusRouteService {
         }
 
         return false;
+    }
+
+    //Java8 implementation
+    public boolean directRouteJava8(Map<Integer, List<Integer>> busRoutes,
+                               int depStationId, int arrStationId,
+                               boolean biDirection) {
+
+        return busRoutes.values().stream()
+                .anyMatch(busRoute -> {
+                    if(biDirection) {
+                        return busRoute.indexOf(depStationId) >= 0 && busRoute.indexOf(arrStationId) >=0;
+                    } else {
+                        return busRoute.indexOf(depStationId) >= 0 &&
+                               busRoute.indexOf(arrStationId) > busRoute.indexOf(depStationId);
+                    }
+                });
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class FileLoaderServiceTest {
     FileLoaderService fileLoaderService;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         String path = "src\\test\\resources\\data\\example2";
         fileLoaderService.loadDataFile(path);
     }

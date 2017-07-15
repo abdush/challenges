@@ -9,6 +9,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -28,13 +29,18 @@ public class Application implements ApplicationRunner {
     }
 
     private static void usage() {
-        System.err.println("System exit. Usage: java -jar <jarfile.jar> <filepath>");
+        logger.error("System exit. Usage: java -jar <jarfile.jar> <filepath>");
         System.exit(-1);
     }
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
         logger.info("Application commandline args... {}" , Arrays.toString(applicationArguments.getSourceArgs()));
-        fileLoaderService.loadDataFile(applicationArguments.getSourceArgs()[0]);
+        try {
+            fileLoaderService.loadDataFile(applicationArguments.getSourceArgs()[0]);
+        } catch (IOException e) {
+            logger.error("System exit. Couldn't Open File {}" , applicationArguments.getSourceArgs()[0]);
+            System.exit(-1);
+        }
     }
 }
